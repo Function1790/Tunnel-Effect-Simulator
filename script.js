@@ -7,7 +7,7 @@ const PI2 = 2 * Math.PI
 const GRAPH_Y = 400
 
 class Wave {
-    constructor(lambda, T, vel = 1, x0 = 0) {
+    constructor(lambda, T, vel = 1, x0 = 0, isEvent = false) {
         this.x = x0
         this.y = 400
         this.vel = vel
@@ -17,6 +17,7 @@ class Wave {
         for (var i = 0; i < 100; i++) {
             this.values.push(0)
         }
+        this.isEvent = isEvent
     }
     setTime(t) {
         for (var x in this.values) {
@@ -30,12 +31,16 @@ class Wave {
     }
     move() {
         this.x += this.vel
+        if (this.isEvent && this.x >= V_func[1][0] && this.x <= V_func[2][0]) {
+            this.vel *= -1
+            this.isEvent = false
+        }
     }
 }
 
 var frame = 0;
 const waves = [
-    new Wave(60, 60, 1),
+    new Wave(60, 60, 1, 0, true),
     //new Wave(80, 60, -1, 650)
 ]
 var y_values = []
@@ -56,7 +61,7 @@ function render() {
         waves[i].addToWave(y_values)
         waves[i].setTime(frame)
         waves[i].move()
-    } 
+    }
     //tasking drawing
     ctx.beginPath()
     ctx.strokeStyle = "rgba(255,0,0,0.5)"
